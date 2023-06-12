@@ -129,3 +129,151 @@ Now, run `sudo ip link show` command again and it should show all interfaces are
   sudo ip netns exec lime-ns ip address add 10.0.0.31/24 dev veth-lime-ns
   sudo ip netns exec lime-ns ip route add default via 10.0.0.1
   ```
+## Step 10: Firewall rules:
+
+```shell
+sudo iptables --append FORWARD --in-interface v-net --jump ACCEPT
+sudo iptables --append FORWARD --out-interface v-net --jump ACCEPT
+```
+These rules enabled traffic to travel across the v-net virtual bridge.These are useful to allow all traffic to pass through the v-net interface without any restrictions.However, keep in mind that using such rules without any filtering can expose your system to potential security risks. But for now we re good to ping!
+
+## Test Connectivity
+```shell
+sudo ip netns exec lime-ns ping -c 2 10.0.0.11
+```
+***Expected Output***
+```bash
+PING 10.0.0.11 (10.0.0.11) 56(84) bytes of data.
+64 bytes from 10.0.0.11: icmp_seq=1 ttl=64 time=0.064 ms
+64 bytes from 10.0.0.11: icmp_seq=2 ttl=64 time=0.169 ms
+
+--- 10.0.0.11 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1006ms
+rtt min/avg/max/mdev = 0.064/0.116/0.169/0.052 ms
+```
+Another one:
+```shell
+sudo ip netns exec gray-ns ping -c 2 10.0.0.11
+```
+***Expected Output***
+```bash
+PING 10.0.0.11 (10.0.0.11) 56(84) bytes of data.
+64 bytes from 10.0.0.11: icmp_seq=1 ttl=64 time=0.051 ms
+64 bytes from 10.0.0.11: icmp_seq=2 ttl=64 time=0.112 ms
+
+--- 10.0.0.11 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1024ms
+rtt min/avg/max/mdev = 0.051/0.081/0.112/0.030 ms
+```
+Another one:
+```shell
+sudo ip netns exec blue-ns ping -c 2 10.0.0.21
+```
+***Expected Output***
+```bash
+PING 10.0.0.21 (10.0.0.21) 56(84) bytes of data.
+64 bytes from 10.0.0.21: icmp_seq=1 ttl=64 time=0.056 ms
+64 bytes from 10.0.0.21: icmp_seq=2 ttl=64 time=0.109 ms
+
+--- 10.0.0.21 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1018ms
+rtt min/avg/max/mdev = 0.056/0.082/0.109/0.026 ms
+```
+Another one:
+```shell
+sudo ip netns exec blue-ns ping -c 2 10.0.0.31
+```
+***Expected Output***
+
+```bash
+PING 10.0.0.31 (10.0.0.31) 56(84) bytes of data.
+64 bytes from 10.0.0.31: icmp_seq=1 ttl=64 time=0.073 ms
+64 bytes from 10.0.0.31: icmp_seq=2 ttl=64 time=0.127 ms
+
+--- 10.0.0.31 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1031ms
+rtt min/avg/max/mdev = 0.073/0.100/0.127/0.027 ms
+```
+
+
+## In addition, the route command in the context of the ip netns exec allows you to view the routing table of a specific network namespace. The routing table contains information about how network traffic should be forwarded or delivered.
+
+To view the routing table of the blue-ns namespace, execute the following command:
+
+```bash
+sudo ip netns exec blue-ns route
+```
+*Output:*
+```bash
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+default         10.0.0.1        0.0.0.0         UG    0      0        0 veth-blue-ns
+10.0.0.0        0.0.0.0         255.255.255.0   U     0      0        0 veth-blue-ns
+```
+
+To view the routing table of the gray-ns namespace, execute the following command:
+```bash
+sudo ip netns exec gray-ns route
+```
+*Output:*
+```bash
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+default         10.0.0.1        0.0.0.0         UG    0      0        0 veth-gray-ns
+10.0.0.0        0.0.0.0         255.255.255.0   U     0      0        0 veth-gray-ns
+```
+To view the routing table of the lime-ns namespace, execute the following command:
+
+```bash
+sudo ip netns exec lime-ns route
+```
+*Output:*
+```bash
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+default         10.0.0.1        0.0.0.0         UG    0      0        0 veth-lime-ns
+10.0.0.0        0.0.0.0         255.255.255.0   U     0      0        0 veth-lime-ns
+```
+
+## Furthermore, the arp command in the context of the ip netns exec allows you to view the ARP cache of a specific network namespace. The ARP cache contains mappings of IP addresses to MAC addresses.
+To view the ARP cache of the blue-ns namespace, execute the following command:
+```bash
+sudo ip netns exec blue-ns arp
+```
+*Output*
+```bash
+Address                  HWtype  HWaddress           Flags Mask            Iface
+10.0.0.1                 ether   d2:22:49:28:a4:c8   C                     veth-blue-ns
+10.0.0.31                ether   fe:c0:37:07:25:e4   C                     veth-blue-ns
+10.0.0.21                ether   1a:08:51:d7:ab:95   C                     veth-blue-ns
+```
+
+To view the ARP cache of the gray-ns namespace, execute the following command:
+```bash
+sudo ip netns exec gray-ns arp
+```
+*Output*
+```bash
+Address                  HWtype  HWaddress           Flags Mask            Iface
+10.0.0.1                 ether   d2:22:49:28:a4:c8   C                     veth-gray-ns
+10.0.0.11                ether   ea:ff:ec:28:f3:aa   C                     veth-gray-ns
+```
+To view the ARP cache of the lime-ns namespace, execute the following command:
+```bash
+sudo ip netns exec lime-ns arp
+```
+*Output*
+```bash
+Address                  HWtype  HWaddress           Flags Mask            Iface
+10.0.0.1                 ether   d2:22:49:28:a4:c8   C                     veth-lime-ns
+10.0.0.11                ether   ea:ff:ec:28:f3:aa   C                     veth-lime-ns
+```
+
+## Clean Up (optional)
+```bash
+sudo ip netns del <namespace>
+sudo ip link delete <bridge network name> type bridge
+```
+If you want to remove the namespaces run these commands to clean up the setup.
+
+  # Cheers! 🍻 Have a good day!
