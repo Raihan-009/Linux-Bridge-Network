@@ -1,4 +1,4 @@
-# Setting up Linux Bridge Network between Namespaces
+# Setting up Linux Bridge Network among Namespaces
 
 This guide outlines the steps to create three namespaces named **blue-ns**, **gray-ns** and **lime-ns**. Then establish a linux bridge network among them using ***veth*** interfaces. The goal is to enable communication among the namespaces and allow them to ping each other.
 
