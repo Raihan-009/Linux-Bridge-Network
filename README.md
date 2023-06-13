@@ -1,6 +1,6 @@
 # Setting up Linux Bridge Network between Namespaces
 
-This guide outlines the steps to create three namespaces named **blue-ns**, **gray-ns** and **lime-ns** namespace and establish a linux bridge network betamonngween them using ***veth*** interfaces. The goal is to enable communication among the namespaces and allow them to ping each other.
+This guide outlines the steps to create three namespaces named **blue-ns**, **gray-ns** and **lime-ns**. Then establish a linux bridge network among them using ***veth*** interfaces. The goal is to enable communication among the namespaces and allow them to ping each other.
 
 ## Prerequisites
 
@@ -21,7 +21,7 @@ This guide outlines the steps to create three namespaces named **blue-ns**, **gr
 ```bash
 sudo ip link add dev v-net type bridge
 ```
-Lets run `sudo ip links show` to check and he ***expected output*** might look like
+Lets run `sudo ip links show` to check and the ***expected output*** might look like
 
 ```shell
 12: v-net: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000
@@ -224,7 +224,7 @@ rtt min/avg/max/mdev = 0.073/0.100/0.127/0.027 ms
 ```
 
 
-## In addition, the route command in the context of the ip netns exec allows you to view the routing table of a specific network namespace. The routing table contains information about how network traffic should be forwarded or delivered.
+## In addition, the `route` command in the context of the `ip netns exec` allows you to view the routing table of a specific network namespace. The routing table contains information about how network traffic should be forwarded or delivered.
 
 To view the routing table of the blue-ns namespace, execute the following command:
 
@@ -263,7 +263,7 @@ default         10.0.0.1        0.0.0.0         UG    0      0        0 veth-lim
 10.0.0.0        0.0.0.0         255.255.255.0   U     0      0        0 veth-lime-ns
 ```
 
-## Furthermore, the arp command in the context of the ip netns exec allows you to view the ARP cache of a specific network namespace. The ARP cache contains mappings of IP addresses to MAC addresses.
+## Furthermore, the `arp` command in the context of the `ip netns exec` allows you to view the ARP cache of a specific network namespace. The ARP cache contains mappings of IP addresses to MAC addresses.
 To view the ARP cache of the blue-ns namespace, execute the following command:
 ```bash
 sudo ip netns exec blue-ns arp
@@ -302,6 +302,6 @@ Address                  HWtype  HWaddress           Flags Mask            Iface
 sudo ip netns del <namespace>
 sudo ip link delete <bridge network name> type bridge
 ```
-If you want to remove the namespaces run these commands to clean up the setup.
+If you want to remove the namespaces and bridge network device run these commands to clean up the setup.
 
   # Cheers! 🍻 Have a good day!
