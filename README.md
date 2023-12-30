@@ -16,7 +16,7 @@ This guide outlines the steps to create three namespaces named **blue-ns**, **gr
     ```
 ## Step 1: Create a Linux bridge:
 
-![Linux-bridge](https://blog-bucket.s3.brilliant.com.bd/thumbnail/315cce34-fc1c-4954-8874-25154e9d96da.JPG)
+![Linux-bridge](https://lab-bucket.s3.brilliant.com.bd/labthumbnail/b0b428c6-3e52-458f-8ebb-a3ca2bbf4e34.JPG)
 
 ```bash
 sudo ip link add dev v-net type bridge
@@ -55,7 +55,7 @@ Run `sudo ip addr show dev v-net`
 
 ## Step 3: Create three network namespaces:
 
-![Namespaces](https://blog-bucket.s3.brilliant.com.bd/thumbnail/65b5ab6f-d29d-4304-822d-453049499fb1.JPG)
+![Namespaces](https://lab-bucket.s3.brilliant.com.bd/labthumbnail/a1ea1b8c-3f6f-41a0-8785-bc04dd1a5ca8.JPG)
 
 ```shell
 sudo ip netns add blue-ns
@@ -66,7 +66,7 @@ Run `sudo ip netns list` to check the list of namespaces.
 
 ## Step 4: Create virtual Ethernet pairs:
 
-![Veth Cables](https://blog-bucket.s3.brilliant.com.bd/thumbnail/4c6803d9-0428-4f2d-82a0-bd3b274daea4.JPG)
+![Veth Cables](https://lab-bucket.s3.brilliant.com.bd/labthumbnail/3b00dd9a-38fa-49dd-9fcf-e501bcf29a5e.JPG)
 
 ```shell
 sudo ip link add veth-blue-ns type veth peer name veth-blue-br
@@ -101,7 +101,7 @@ Run `sudo ip netns exec <namespace-name> ip link show` to verify
 
 ## Step 6: Add the other end of the virtual interfaces to the bridge:
 
-![Interfaces](https://blog-bucket.s3.brilliant.com.bd/thumbnail/420d9af0-a090-4cc9-a50d-8ede4e0cb936.JPG)
+![Interfaces](https://lab-bucket.s3.brilliant.com.bd/labthumbnail/593024c4-929a-46bf-93ac-badef9bef6ee.JPG)
 
 ```shell
 sudo ip link set dev veth-blue-br master v-net
@@ -137,7 +137,7 @@ Now, run `sudo ip link show` command again and it should show all interfaces are
 
 ## Step 9: Assign IP addresses to the virtual interfaces within each namespace and set the default routes:
 
-![Ip address](https://blog-bucket.s3.brilliant.com.bd/thumbnail/09cd2617-dfc1-41d8-9043-be176772b7af.JPG)
+![Ip address](https://lab-bucket.s3.brilliant.com.bd/labthumbnail/9970be9f-4d6d-4a56-aaaf-a61c53575671.JPG)
 
 - In the blue-ns namespace:
   ```bash
@@ -164,7 +164,7 @@ These rules enabled traffic to travel across the v-net virtual bridge.These are 
 
 ## Test Connectivity
 
-![Ping](https://blog-bucket.s3.brilliant.com.bd/thumbnail/7dd59c8e-a0ad-4dc8-badb-8dd66a03ee5e.JPG)
+![Ping](https://lab-bucket.s3.brilliant.com.bd/labthumbnail/ffa717ba-9a68-47d3-9e5f-b2878e8aeb83.JPG)
 
 ```shell
 sudo ip netns exec lime-ns ping -c 2 10.0.0.11
